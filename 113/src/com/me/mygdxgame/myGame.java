@@ -9,6 +9,7 @@ public class myGame extends Game {
 	public void create(){
 		Assets.load();
 		
+		
 		gscreen = new GameScreen(this);
 		
 		setScreen(gscreen);

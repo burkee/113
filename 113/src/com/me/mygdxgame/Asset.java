@@ -7,28 +7,24 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Assets {
+public class Asset {
 
 	public static Texture texture_back;
 	public static Sprite sprite_back;
 	
 	public static Texture texture_sheet;
-	public static Sprite sprite_1;
-	public static Sprite sprite_2;
-	public static Sprite sprite_3;
-	public static Sprite sprite_4;
 	
 	public static Texture sheet;
 	public static TextureRegion[] sheet_frames;
 	public static TextureRegion current_frame;
 	public static Animation loading_animation;
-	public static Animation asteroid;
+	public static Animation bill;
 	
 	public static Texture texture_steve;
 	public static Sprite steve; 
 	
-	public static Texture texture_asteroid;
-	//public static Sprite asteroid; 
+	public static Texture texture_bill;
+	//public static Sprite bill; 
 	
 	public static void load(){
 		
@@ -38,8 +34,7 @@ public class Assets {
 		sprite_back.flip(false, true);
 		
 		texture_sheet = new Texture(Gdx.files.internal("3.png"));
-		sprite_1 = new Sprite(texture_sheet, 0, 0, 64, 64);
-		
+
 		sheet = new Texture(Gdx.files.internal("3.png"));
 		TextureRegion[][] temp = TextureRegion.split(sheet, 128, 128);
 		sheet_frames = new TextureRegion[8];
@@ -60,9 +55,9 @@ public class Assets {
 		texture_steve = new Texture(Gdx.files.internal("data/shock2.png"));
 		steve = new Sprite(texture_steve);
 		
-		texture_asteroid = new Texture(Gdx.files.internal("3.png"));
-	//	asteroid = new Sprite(texture_asteroid);
-		asteroid = new Animation(.1F, sheet_frames);
+		texture_bill = new Texture(Gdx.files.internal("3.png"));
+	//	bill = new Sprite(texture_bill);
+		bill = new Animation(.1F, sheet_frames);
 		
 	}
 }
