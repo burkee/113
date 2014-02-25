@@ -11,24 +11,27 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen implements Screen{
 	OrthographicCamera camera;
 	SpriteBatch batch;
 
-	Texture texture_back;
-	Sprite sprite_back;
-	public int asteroidX,asteroidY=0;
+	Sprite sprite_back; //background image
+	
 	Random rand;
-	float state_time;
+	
 	Vector3 touch;
 	boolean touched=false;
-	Asteroid asteroid;
-	int spellHitSpotX,spellHitSpotY;
 	
-	public float time = 0;
+	Asteroid asteroid;
+	
+	int spellHitSpotX,spellHitSpotY; //spot where mouse was clicked
+	public int asteroidX,asteroidY=0; //coordinate of where asteroid animation runs 
+	
+	float stateTime; //resets on mouseclick
+	float currentStateTime; //set to time of mouseclick
+	float enemyStateTime; //continuous time
 	
 	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	public ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
@@ -40,13 +43,13 @@ public class GameScreen implements Screen{
 		
 		batch = new SpriteBatch();
 		rand = new Random();
-		state_time = 0F;
+		stateTime = 0F;
 		
 		touch = new Vector3();
 		asteroid = new Asteroid();
 		int c= 0;
-		for (int i=0;i<30;i++)
-			enemies.add(new Enemy(i*3, c+=30));
+		for (int i=0;i<15;i++)
+			enemies.add(new Enemy(i*3, c+=70));
 		for (int i=0;i<30;i++)
 			asteroids.add(new Asteroid());
 	}
@@ -58,36 +61,38 @@ public class GameScreen implements Screen{
 		
 		camera.update();
 		
-		state_time += Gdx.graphics.getDeltaTime();
+		stateTime += Gdx.graphics.getDeltaTime();
+		enemyStateTime += Gdx.graphics.getDeltaTime();
 		batch.setProjectionMatrix(camera.combined);
 		update();
 		generalUpdate(touch, camera);
-		draw();
+		draw(delta);
+		System.out.println(stateTime + "         " + enemyStateTime + "      " + currentStateTime);
 		
 		
 	}
 	
-	private void draw(){
+	private void draw(float delta){
 		batch.begin();
 		
 		//background
 		batch.draw(Assets.sprite_back, 0, 0, 1920, 1080);
 		
-		//asteroid
-		for (int i=0;i<asteroids.size();i++)
-			asteroids.get(i).current_frame = Assets.asteroid.getKeyFrame(state_time, false);
-		//if (touched == true)
-			//while (asteroidY > spellHitSpotY)
-		//for (int i=0;i<asteroids.size();i++)
-		int count=0;
-				batch.draw(asteroids.get(count).current_frame, asteroidX+=.5, asteroidY+=3);
-		count++;
-		
 		//enemies
 		for (int i=0;i<enemies.size();i++)
-			enemies.get(i).current_frame = enemies.get(i).loading_animation.getKeyFrame(state_time, true);
+			enemies.get(i).current_frame = enemies.get(i).loading_animation.getKeyFrame(enemyStateTime, true);
 		for (int i=0;i<enemies.size();i++)
 			batch.draw(enemies.get(i).current_frame, enemies.get(i).x, enemies.get(i).y);
+		
+		//asteroid
+		for (int i=0;i<asteroids.size();i++)
+					asteroids.get(i).current_frame = Assets.asteroid.getKeyFrame(stateTime, false);
+				//if (touched == true)
+					//while (asteroidY > spellHitSpotY)
+				//for (int i=0;i<asteroids.size();i++)
+		int count=0;
+		batch.draw(asteroids.get(count).current_frame, asteroidX+=1.5, asteroidY+=3);
+		count++;		
 		
 		batch.end();
 	}
@@ -112,11 +117,13 @@ private void checkCollisions() {
 		
 			for(int i = 0; i < enemies.size(); i++) {
 				Enemy e = enemies.get(i);
-				if(e.bounds.contains(asteroidX, asteroidY)) {
-					enemies.remove(i);
-					enemies.get(i).shouldRemove=true;
-					i--;
-					break;
+				if(e.bounds.contains(spellHitSpotX, spellHitSpotY)) {
+					if ((int)stateTime == (int)1.1){  //Time it takes for asteroid to hit enemy
+						enemies.remove(i);
+						enemies.get(i).shouldRemove=true;
+						i--;
+						break;
+				}
 				}
 			}
 		
@@ -137,14 +144,16 @@ private void checkCollisions() {
 			asteroid.bounds.x -= 5;
 		}	
 		if (Gdx.input.justTouched()){
-			state_time=0;
+			currentStateTime = stateTime;
+			stateTime=0;
 			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touch);
 			asteroidX = (int)touch.x - 64;
 			asteroidY = (int)touch.y - 254;
 			spellHitSpotX = (int)touch.x - 64;
-			spellHitSpotY = (int)touch.y - 254;
+			spellHitSpotY = (int)touch.y;
 			touched = true;
+			
 			//if (asteroid.bounds.y > asteroidY)
 				//asteroid.bounds.y += 5;
 	}

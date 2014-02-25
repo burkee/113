@@ -10,6 +10,7 @@ public class Asteroid {
 
 	public static TextureRegion current_frame;
 
+	public double asteroidCastTime= 1.1;
 	public final Animation image;
 	public final Rectangle bounds;
 	

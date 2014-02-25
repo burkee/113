@@ -26,7 +26,7 @@ public class Enemy{
 	
 	public Enemy(int x, int y){
 		 this.x = x; this.y = y;
-		 bounds = new Rectangle(x-64, y, 85, 64);
+		 bounds = new Rectangle(x-120, y, 85, 64);
 
         sheet = new Texture(Gdx.files.internal("data/crab_walking.png"));
 		TextureRegion[][] temp = TextureRegion.split(sheet, 85, 64);
@@ -47,8 +47,8 @@ public class Enemy{
     }
 	
 public void update() {
-		//bounds.x +=1;
-		//x += 1;
+		bounds.x +=1;   //moves the hitbox along x axis
+		x += 1; //moves the animation across the x axis
 		//y += 3;
 }
 	
