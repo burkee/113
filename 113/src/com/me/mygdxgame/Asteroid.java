@@ -11,11 +11,12 @@ public class Asteroid {
 	public static TextureRegion current_frame;
 
 	public double asteroidCastTime= 1.1;
-	public final Animation image;
+	public final Animation image, explosion;
 	public final Rectangle bounds;
 	
 	public Asteroid(){
 		image = Assets.asteroid;
+		explosion = Assets.explosion;
 		bounds = new Rectangle(10, 10, 128, 128);
 		
 		

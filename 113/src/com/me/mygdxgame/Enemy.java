@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Enemy{
+	
 	private SpriteBatch sb = new SpriteBatch();;
 	public static TextureRegion current_frame;
 	Texture texture = new Texture(Gdx.files.internal("data/crab_walking.png"));
@@ -26,7 +27,7 @@ public class Enemy{
 	
 	public Enemy(int x, int y){
 		 this.x = x; this.y = y;
-		 bounds = new Rectangle(x-120, y, 85, 64);
+		 bounds = new Rectangle(x-128, y, 64, 64);
 
         sheet = new Texture(Gdx.files.internal("data/crab_walking.png"));
 		TextureRegion[][] temp = TextureRegion.split(sheet, 85, 64);

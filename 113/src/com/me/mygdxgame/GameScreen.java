@@ -32,6 +32,7 @@ public class GameScreen implements Screen{
 	float stateTime; //resets on mouseclick
 	float currentStateTime; //set to time of mouseclick
 	float enemyStateTime; //continuous time
+	float expST; //explosion
 	
 	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	public ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
@@ -48,8 +49,12 @@ public class GameScreen implements Screen{
 		touch = new Vector3();
 		asteroid = new Asteroid();
 		int c= 0;
+		
+		//creates array of enemies
 		for (int i=0;i<15;i++)
 			enemies.add(new Enemy(i*3, c+=70));
+		
+		//creates array of asteroids
 		for (int i=0;i<30;i++)
 			asteroids.add(new Asteroid());
 	}
@@ -63,11 +68,13 @@ public class GameScreen implements Screen{
 		
 		stateTime += Gdx.graphics.getDeltaTime();
 		enemyStateTime += Gdx.graphics.getDeltaTime();
+		expST += Gdx.graphics.getDeltaTime();
+		
 		batch.setProjectionMatrix(camera.combined);
 		update();
 		generalUpdate(touch, camera);
 		draw(delta);
-		System.out.println(stateTime + "         " + enemyStateTime + "      " + currentStateTime);
+		//System.out.println(stateTime + "         " + enemyStateTime + "      " + currentStateTime);
 		
 		
 	}
@@ -91,8 +98,11 @@ public class GameScreen implements Screen{
 					//while (asteroidY > spellHitSpotY)
 				//for (int i=0;i<asteroids.size();i++)
 		int count=0;
-		batch.draw(asteroids.get(count).current_frame, asteroidX+=1.5, asteroidY+=3);
-		count++;		
+		
+		if (!asteroids.get(count).image.isAnimationFinished(stateTime)){
+			batch.draw(asteroids.get(count).current_frame, asteroidX+=1.5, asteroidY+=3);	
+			}
+		count++;	
 		
 		batch.end();
 	}
@@ -113,8 +123,9 @@ public class GameScreen implements Screen{
 
 	}
 	
-private void checkCollisions() {
-		
+	private void checkCollisions() {
+	
+	//collision for asteroid vs enemies
 			for(int i = 0; i < enemies.size(); i++) {
 				Enemy e = enemies.get(i);
 				if(e.bounds.contains(spellHitSpotX, spellHitSpotY)) {
@@ -123,7 +134,7 @@ private void checkCollisions() {
 						enemies.get(i).shouldRemove=true;
 						i--;
 						break;
-				}
+					}
 				}
 			}
 		
