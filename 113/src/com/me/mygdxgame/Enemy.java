@@ -1,5 +1,7 @@
 package com.me.mygdxgame;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,8 +28,11 @@ public class Enemy{
 	public final Rectangle bounds;
 	
 	public Enemy(int x, int y){
-		 this.x = x; this.y = y;
-		 bounds = new Rectangle(x-128, y, 64, 64);
+		Random r = new Random();
+		int randY = r.nextInt(700);  //random 0-700
+		this.y = randY;  //starts the enemies at random heights 0-700
+		this.x = 0;   //Starts enemies from left side of screen
+		 bounds = new Rectangle(x-128, randY, 64, 64);
 
         sheet = new Texture(Gdx.files.internal("data/crab_walking.png"));
 		TextureRegion[][] temp = TextureRegion.split(sheet, 85, 64);

@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector3;
 public class GameScreen implements Screen{
 	OrthographicCamera camera;
 	SpriteBatch batch;
+	int tempSize;
 
 	Sprite sprite_back; //background image
 	
@@ -23,8 +24,6 @@ public class GameScreen implements Screen{
 	
 	Vector3 touch;
 	boolean touched=false;
-	
-	Asteroid asteroid;
 	
 	int spellHitSpotX,spellHitSpotY; //spot where mouse was clicked
 	public int asteroidX,asteroidY=0; //coordinate of where asteroid animation runs 
@@ -47,11 +46,10 @@ public class GameScreen implements Screen{
 		stateTime = 0F;
 		
 		touch = new Vector3();
-		asteroid = new Asteroid();
 		int c= 0;
 		
 		//creates array of enemies
-		for (int i=0;i<15;i++)
+		for (int i=0;i<50;i++)
 			enemies.add(new Enemy(i*3, c+=70));
 		
 		//creates array of asteroids
@@ -86,9 +84,12 @@ public class GameScreen implements Screen{
 		batch.draw(Assets.sprite_back, 0, 0, 1920, 1080);
 		
 		//enemies
+		//this sets all the enemies to be on the same animation image
 		for (int i=0;i<enemies.size();i++)
 			enemies.get(i).current_frame = enemies.get(i).loading_animation.getKeyFrame(enemyStateTime, true);
-		for (int i=0;i<enemies.size();i++)
+		//this draws the enemies
+		tempSize = (int)enemyStateTime;
+		for (int i=0;i<tempSize;i++) //tempSize used to be enemies.size() - tempSize allows newly drawn crabs to start from x=0
 			batch.draw(enemies.get(i).current_frame, enemies.get(i).x, enemies.get(i).y);
 		
 		//asteroid
@@ -99,9 +100,11 @@ public class GameScreen implements Screen{
 				//for (int i=0;i<asteroids.size();i++)
 		int count=0;
 		
-		if (!asteroids.get(count).image.isAnimationFinished(stateTime)){
-			batch.draw(asteroids.get(count).current_frame, asteroidX+=1.5, asteroidY+=3);	
+		if (!asteroids.get(count).image.isAnimationFinished(stateTime) && touched==true){
+			batch.draw(asteroids.get(count).current_frame, asteroidX+=1.5, asteroidY+=3);
 			}
+		else
+			touched=false;
 		count++;	
 		
 		batch.end();
@@ -110,7 +113,7 @@ public class GameScreen implements Screen{
 	private void update(){
 		
 		// update enemies
-		for(int i = 0; i < enemies.size(); i++) {
+		for(int i = 0; i < tempSize; i++) {  //used to be enemies.size() - tempSize allows newly drawn crabs to start from x=0
 			enemies.get(i).update();
 //			if(enemies.get(i).shouldRemove) {
 //				enemies.remove(i);
@@ -142,18 +145,18 @@ public class GameScreen implements Screen{
 
 	private void generalUpdate(Vector3 touch, OrthographicCamera camera) {
 		// TODO Auto-generated method stub
-		if (Gdx.input.isKeyPressed(Keys.W)){
-			asteroid.bounds.y -= 5;
-		}
-		if (Gdx.input.isKeyPressed(Keys.S)){
-			asteroid.bounds.y += 5;
-		}	
-		if (Gdx.input.isKeyPressed(Keys.D)){
-			asteroid.bounds.x += 5;
-		}	
-		if (Gdx.input.isKeyPressed(Keys.A)){
-			asteroid.bounds.x -= 5;
-		}	
+//		if (Gdx.input.isKeyPressed(Keys.W)){
+//			asteroid.bounds.y -= 5;
+//		}
+//		if (Gdx.input.isKeyPressed(Keys.S)){
+//			asteroid.bounds.y += 5;
+//		}	
+//		if (Gdx.input.isKeyPressed(Keys.D)){
+//			asteroid.bounds.x += 5;
+//		}	
+//		if (Gdx.input.isKeyPressed(Keys.A)){
+//			asteroid.bounds.x -= 5;
+//		}	
 		if (Gdx.input.justTouched()){
 			currentStateTime = stateTime;
 			stateTime=0;
